@@ -2,11 +2,8 @@ import 'dotenv/config.js';
 
 import cors from 'cors';
 
-import usuarioController from './controller/usuarioController.js'
-
-import admController from './controller/admController.js'
-
 import express from "express";
+import rotas from './rotas.js';
 
 const servidor = express();
 
@@ -14,10 +11,7 @@ servidor.use(express.json());
 
 servidor.use(cors());
 
-servidor.use(usuarioController);
-
-servidor.use(admController)
-
+rotas(servidor);
 
 let PORTA = process.env.PORT;
 
