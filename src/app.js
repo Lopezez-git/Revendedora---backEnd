@@ -19,6 +19,6 @@ servidor.use(usuarioController);
 servidor.use(admController)
 
 
-let PORTA = process.env.PORTA;
+let PORTA = process.env.PORT;
 
 servidor.listen(PORTA, () => console.log(`Porta aberta ${PORTA}`));
