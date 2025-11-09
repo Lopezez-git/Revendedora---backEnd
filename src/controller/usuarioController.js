@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { salvarUsuario } from "../repository/usuarioRepository.js";
+import { salvarCliente } from "../repository/usuarioRepository.js";
 import { verificarUsuario } from "../repository/usuarioRepository.js";
 import { gerarToken, verificarToken } from "../services/jwt.js";
 const endPoints = Router();
 
-endPoints.post('/usuario/cadastro', async (req, resp) => {
+endPoints.post('/usuario/cadastro/cliente', async (req, resp) => {
 try{
     let usuario = req.body;
 
-    let saida = await salvarUsuario(usuario);
+    let saida = await salvarCliente(usuario);
 
     if(!saida){
 
@@ -37,9 +37,10 @@ endPoints.post('/usuario/login', async (req, resp) => {
 
     const verificaUsuario = await verificarUsuario(usuario);
 
-    //debug (apagar dps)
+    if(usuario === null){
 
-    console.log(verificaUsuario);
+      resp.status(400).send({erro: "Usuario nulo"})
+    }
 
     if (verificaUsuario.length === 0) {
       return resp.status(400).send({ erro: "Email ou senha incorretos" });

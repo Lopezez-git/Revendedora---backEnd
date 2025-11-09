@@ -6,6 +6,7 @@ export function gerarToken(usuario) {
 
     const token = jwt.sign({
         id: usuario.id,
+        nome: usuario.nome,
         email: usuario.email,
         cargo: usuario.cargo
     },

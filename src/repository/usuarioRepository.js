@@ -1,16 +1,15 @@
 import connection from "./connection.js";
 
-export async function salvarUsuario(usuario) {
+export async function salvarCliente(usuario) {
 
     try {
         const comando = `insert into usuario(nome, email, senha, cargo) 
-    values(?, ?, MD5(?), ?)`;
+    values(?, ?, MD5(?), 'cliente')`;
 
         let [info] = await connection.query(comando,
             [usuario.nome,
             usuario.email,
-            usuario.senha,
-            usuario.cargo]);
+            usuario.senha]);
 
         return info.insertId;
     }
