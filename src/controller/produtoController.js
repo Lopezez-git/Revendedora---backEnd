@@ -10,6 +10,7 @@ import {
     atualizarProduto, 
     deletarProduto 
 } from "../repository/produtoRepository.js";
+import { verificarAdm } from "../services/cargo.js";
 
 let endPoints = Router();
 
@@ -36,11 +37,17 @@ endPoints.post('/adm/produto', autenticar, uploadImage.single('imagem'), async(r
     try {
         const produto = req.body;
         const imagemProduto = req.file;
+        const usuario = req.usuario;
 
         // Validar se é ADM
-        if (req.usuario.cargo !== 'ADM') {
-            return resp.status(403).send({ erro: "Acesso negado" });
-        }
+        let verifica = verificarAdm(usuario.cargo);
+        
+                if(!verifica){
+        
+                    resp.status(500).send({
+                        erro: "Usuario sem permissão"
+                    })
+                }
 
         // Validar campos obrigatórios
         if (!produto.nome || !produto.marca || !produto.preco || !produto.descricao || !imagemProduto) {
@@ -114,11 +121,17 @@ endPoints.put('/adm/produto/:id', autenticar, uploadImage.single('imagem'), asyn
         const { id } = req.params;
         const produto = req.body;
         const novaImagem = req.file;
+        const usuario = req.usuario;
 
         // Validar se é ADM
-        if (req.usuario.cargo !== 'ADM') {
-            return resp.status(403).send({ erro: "Acesso negado" });
-        }
+        let verifica = verificarAdm(usuario.cargo);
+        
+                if(!verifica){
+        
+                    resp.status(500).send({
+                        erro: "Usuario sem permissão"
+                    })
+                }
 
         // Verificar se produto existe
         let produtoExistente = await buscarProdutoPorId(id);
@@ -162,11 +175,17 @@ endPoints.put('/adm/produto/:id', autenticar, uploadImage.single('imagem'), asyn
 endPoints.delete('/adm/produto/:id', autenticar, async(req, resp) => {
     try {
         const { id } = req.params;
+        const usuario = req.usuario;
 
         // Validar se é ADM
-        if (req.usuario.cargo !== 'ADM') {
-            return resp.status(403).send({ erro: "Acesso negado" });
-        }
+        let verifica = verificarAdm(usuario.cargo);
+        
+                if(!verifica){
+        
+                    resp.status(500).send({
+                        erro: "Usuario sem permissão"
+                    })
+                }
 
         // Verificar se produto existe
         let produto = await buscarProdutoPorId(id);
