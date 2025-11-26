@@ -3,6 +3,7 @@ import { Router } from "express";
 import autenticar from "../middleware/autenticar.js";
 
 import { listarClientes } from "../repository/clienteRepository.js";
+import { verificarAdm } from "../services/cargo.js";
 
 const endPoints = Router();
 
@@ -11,16 +12,15 @@ endPoints.get('/adm/mostrar-clientes', autenticar, async (req, resp) => {
     try {
         let usuario = req.usuario;
 
-        if (usuario.cargo !== 'ADM') {
+        //verifica se o usuario é um ADM
 
-            console.log(usuario.cargo);
+        let verifica = verificarAdm(usuario.cargo);
 
-            resp.status(400).send(
-                {
-                    erro: "Usuario sem permissão",
-                    cargo: usuario.cargo
-                }
-            );
+        if(!verifica){
+
+            resp.status(500).send({
+                erro: "Usuario sem permissão"
+            })
         }
 
         let saida = await listarClientes();
