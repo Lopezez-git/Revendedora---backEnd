@@ -1,7 +1,7 @@
 import { Router } from "express";
 import autenticar from "../middleware/autenticar.js";
 import { buscarProdutoPorId } from "../repository/produtoRepository.js";
-import { buscarTodasVendas, buscarVendaPorId, buscaVendaItem} from "../repository/vendaRepository.js";
+import { buscarTodasVendas, buscarVendaPorId, buscaVendaItem, criarVenda} from "../repository/vendaRepository.js";
 
 const endPoints = Router();
 
@@ -53,7 +53,7 @@ endPoints.post('/cliente/venda', autenticar, async (req, resp) => {
 
         //criar a venda
 
-        let venda = await criarVenda(idUsuario, itens);
+        let venda = await criarVenda(usuario, itens);
 
         resp.status(201).send({
             mensagem: "Compra realizada com sucesso!",

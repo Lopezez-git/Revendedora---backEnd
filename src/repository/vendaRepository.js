@@ -63,9 +63,9 @@ export async function criarVenda(idUsuario, itens) {
         // Buscar itens
         let [itensVenda] = await connection.query(`
             SELECT 
-                vi.quantidade,
+                vi.qtd,
                 vi.preco_unitario,
-                (vi.quantidade * vi.preco_unitario) as subtotal,
+                (vi.qtd * vi.preco_unitario) as subtotal,
                 p.nome as produto_nome,
                 p.marca as produto_marca
             FROM venda_item vi
@@ -113,7 +113,7 @@ export async function buscaVendaItem(vendaId) {
     let comandoItens = `
             SELECT 
                 vi.id,
-                vi.quantidade,
+                vi.qtd,
                 vi.preco_unitario,
                 (vi.quantidade * vi.preco_unitario) as subtotal,
                 p.nome as produto_nome,
