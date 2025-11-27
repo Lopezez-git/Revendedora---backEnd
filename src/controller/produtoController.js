@@ -49,8 +49,16 @@ endPoints.post('/adm/produto', autenticar, uploadImage.single('imagem'), async(r
                     })
                 }
 
+                console.log(produto.nome)
+                console.log(produto.marca)
+                console.log(produto.preco)
+                console.log(produto.descricao)
+                console.log(imagemProduto)
+                console.log(produto.estoque)
+
+
         // Validar campos obrigatórios
-        if (!produto.nome || !produto.marca || !produto.preco || !produto.descricao || !imagemProduto) {
+        if (!produto.nome || !produto.marca || !produto.preco || !produto.descricao || !imagemProduto || !produto.estoque) {
             return resp.status(400).send({ erro: "Todos os campos são obrigatórios" });
         }
 

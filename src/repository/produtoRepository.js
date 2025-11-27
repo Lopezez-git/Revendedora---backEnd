@@ -5,15 +5,16 @@ import connection from "./connection.js";
 // ========================================
 export async function inserirProduto(produto, nomeImagem) {
     try {
-        let comando = `INSERT INTO produto(nome, marca, preco, descricao, imagem)
-                       VALUES(?, ?, ?, ?, ?)`;
+        let comando = `INSERT INTO produto(nome, marca, preco, descricao, imagem, estoque)
+                       VALUES(?, ?, ?, ?, ?, ?)`;
 
         let valores = [
             produto.nome,
             produto.marca,
             produto.preco,
             produto.descricao,
-            nomeImagem
+            nomeImagem,
+            produto.estoque
         ];
 
         let [inserir] = await connection.query(comando, valores);
@@ -73,7 +74,8 @@ export async function atualizarProduto(id, produto, nomeImagem) {
                            marca = ?, 
                            preco = ?, 
                            descricao = ?, 
-                           imagem = ?
+                           imagem = ?,
+                           estoque = ?
                        WHERE id = ?`;
 
         let valores = [
@@ -82,7 +84,8 @@ export async function atualizarProduto(id, produto, nomeImagem) {
             produto.preco,
             produto.descricao,
             nomeImagem,
-            id
+            produto.estoque,
+            id         
         ];
 
         await connection.query(comando, valores);
