@@ -2,6 +2,7 @@ import { Router } from "express";
 import autenticar from "../middleware/autenticar.js";
 import { buscarProdutoPorId } from "../repository/produtoRepository.js";
 import { buscarTodasVendas, buscarVendaPorId, buscaVendaItem, criarVenda} from "../repository/vendaRepository.js";
+import connection from "../repository/connection.js";
 
 const endPoints = Router();
 
@@ -111,6 +112,60 @@ endPoints.get('/cliente/venda/:id', autenticar, async (req, resp) => {
         });
 })
 
+endPoints.put('/adm/venda/:id/status', autenticar, async(req, resp) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        // Verificar se é ADM
+        if (req.usuario.cargo !== 'ADM') {
+            return resp.status(403).send({ erro: "Acesso negado. Apenas administradores podem alterar status." });
+        }
+
+        // Validar status permitidos
+        const statusPermitidos = ['PENDENTE', 'PAGO', 'EM_ANDAMENTO'];
+        
+        if (!status || !statusPermitidos.includes(status.toUpperCase())) {
+            return resp.status(400).send({ 
+                erro: "Status inválido",
+                statusPermitidos: statusPermitidos
+            });
+        }
+
+        // Verificar se venda existe
+        let [venda] = await connection.query('SELECT * FROM venda WHERE id = ?', [id]);
+        
+        if (venda.length === 0) {
+            return resp.status(404).send({ erro: "Venda não encontrada" });
+        }
+
+        // Atualizar status
+        await connection.query(
+            'UPDATE venda SET status = ? WHERE id = ?',
+            [status.toUpperCase(), id]
+        );
+
+        // Buscar venda atualizada
+        [venda] = await connection.query(`
+            SELECT 
+                v.*,
+                u.nome as cliente_nome,
+                u.email as cliente_email
+            FROM venda v
+            INNER JOIN usuario u ON v.id_usuario = u.id
+            WHERE v.id = ?
+        `, [id]);
+
+        resp.status(200).send({
+            mensagem: "Status atualizado com sucesso",
+            venda: venda[0]
+        });
+
+    } catch (err) {
+        console.error("Erro ao atualizar status:", err);
+        resp.status(500).send({ erro: "Erro ao atualizar status da venda" });
+    }
+});
 
 
 export default endPoints;
