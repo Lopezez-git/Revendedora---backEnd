@@ -1,7 +1,5 @@
 import { Router } from "express";
-
-import autenticar from "../middleware/autenticar.js";
-
+import autenticar from "../middleware/autenticar.js"; //importando o JWT 'jsonWebToken'
 import { listarClientes } from "../repository/clienteRepository.js";
 import { verificarAdm } from "../services/cargo.js";
 
@@ -18,7 +16,7 @@ endPoints.get('/adm/mostrar-clientes', autenticar, async (req, resp) => {
 
         if(!verifica){
 
-            resp.status(500).send({
+            resp.status(401).send({
                 erro: "Usuario sem permissão"
             })
         }

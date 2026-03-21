@@ -16,6 +16,6 @@ servidor.use('/storage/imagemProduto', express.static(path.join(process.cwd(), '
 
 rotas(servidor);
 
-let PORTA = process.env.PORT;
+let PORTA = process.env.PORTA;
 
 servidor.listen(PORTA, () => console.log(`Porta aberta ${PORTA}`));

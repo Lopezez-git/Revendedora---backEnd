@@ -35,12 +35,16 @@ endPoints.post('/usuario/login', async (req, resp) => {
   try {
     const usuario = req.body;
 
-    const verificaUsuario = await verificarUsuario(usuario);
+    //verificando se usuario existe
 
     if(usuario === null){
 
       resp.status(400).send({erro: "Usuario nulo"})
     }
+
+    const verificaUsuario = await verificarUsuario(usuario);
+
+    
 
     if (verificaUsuario.length === 0) {
       return resp.status(400).send({ erro: "Email ou senha incorretos" });
