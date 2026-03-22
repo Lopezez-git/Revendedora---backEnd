@@ -34,3 +34,21 @@ CREATE TABLE venda_item (
     FOREIGN KEY (id_venda) REFERENCES venda(id),
     FOREIGN KEY (id_produto) REFERENCES produto(id)
 );
+
+CREATE TABLE carrinho (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
+
+CREATE TABLE carrinho_item (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_carrinho INT NOT NULL,
+    id_produto INT NOT NULL,
+    qtd INT NOT NULL,
+
+    FOREIGN KEY (id_carrinho) REFERENCES carrinho(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_produto) REFERENCES produto(id)
+);
